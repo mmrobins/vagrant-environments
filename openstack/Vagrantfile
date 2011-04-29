@@ -1,0 +1,26 @@
+Vagrant::Config.run do |config|
+  config.vm.define :controller do |controller_config|
+    controller_config.vm.box = "ubuntu_lucid_1004_64"
+    controller_config.vm.network "33.33.33.10"
+    #controller_config.vm.forward_port "http", 80, 8080
+    controller_config.vm.forward_port "apt-cacher-ng", 3142, 3142
+    controller_config.vm.share_folder "apt-cache", "/vagrant/apt-cacher-ng", "/Users/matthewrobinson/apt-cacher-ng"
+    controller_config.vm.provision :puppet do |puppet|
+      puppet.module_path = ["/Users/matthewrobinson/work/puppetlabs-modules/dist", "/Users/matthewrobinson/work/matt-puppet-modules"]
+      puppet.manifests_path = "puppetmanifests"
+      puppet.manifest_file = "controller.pp"
+    end
+  end
+
+# config.vm.define :client do |client_config|
+#   client_config.vm.box = "ubuntu_lucid_1004_64"
+#   client_config.vm.network "33.33.33.11"
+#   #client_config.vm.forward_port "http", 80, 8080
+#   #client_config.vm.share_folder "v-data", "/vagrant_data", "../data"
+#   client_config.vm.provision :puppet do |puppet|
+#     puppet.module_path = ["/Users/matthewrobinson/work/puppetlabs-modules/dist", "/Users/matthewrobinson/work/matt-puppet-modules"]
+#     puppet.manifests_path = "puppetmanifests"
+#     puppet.manifest_file = "client.pp"
+#   end
+# end
+end
